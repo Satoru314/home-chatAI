@@ -3,7 +3,6 @@
 マイクに向かって日本語を話すと、リアルタイムで文字起こしされるプログラム。
 オフライン音声認識エンジン [Vosk](https://alphacephei.com/vosk/) を使用。
 
-将来的に「ウェイクワードに反応して特定の処理を実行する」基盤に発展させる予定。
 
 ---
 
@@ -91,3 +90,28 @@ python test_microphone.py -m ja -f out.wav   # 録音を out.wav に保存
 
 - **モデルの置き場所**: `-m ja` で落ちるモデルはプロジェクト外の `~/.cache/vosk/` に入る。プロジェクトをコピーしてもモデルは付いてこないが、`-m ja` 実行時に再ダウンロードされる（ネット接続が必要）。
 - **精度について**: `-m ja` は軽量モデル（small, 約 48MB）。誤変換が多い場合は高精度な大モデル（`vosk-model-ja-0.22`, 約 1GB）への差し替えを検討する。
+
+---
+
+## 高精度モデル（大モデル）を使う
+
+軽量モデルより誤変換が少ない大モデル `vosk-model-ja-0.22`（約 1GB）を使う場合。
+
+### 1. ダウンロードと展開（プロジェクト直下に置く）
+
+```bash
+curl -SL -O https://alphacephei.com/vosk/models/vosk-model-ja-0.22.zip
+unzip vosk-model-ja-0.22.zip
+rm vosk-model-ja-0.22.zip
+```
+
+`unzip` が無ければ先に `sudo apt install unzip`。
+
+### 2. 実行（`-m` にモデルのフォルダを指定）
+
+```bash
+python test_microphone.py -m ./vosk-model-ja-0.22
+```
+
+`-m` にフォルダを渡すとそのモデルを直接読み込む。従来どおり `-m ja`（言語コード = 小モデル自動DL）も引き続き使える。
+

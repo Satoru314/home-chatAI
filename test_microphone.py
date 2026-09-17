@@ -5,6 +5,7 @@
 # For more help run: `python test_microphone.py -h`
 
 import argparse
+import os
 import queue
 import sys
 import sounddevice as sd
@@ -58,7 +59,11 @@ try:
         
     if args.model is None:
         model = Model(lang="en-us")
+    elif os.path.isdir(args.model):
+        # -m にフォルダを渡した場合は、そのモデルを直接読む（大モデル用）
+        model = Model(model_path=args.model)
     else:
+        # それ以外は言語コード扱い（例: -m ja で自動ダウンロード）
         model = Model(lang=args.model)
 
     if args.filename:
